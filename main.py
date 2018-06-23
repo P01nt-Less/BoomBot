@@ -11,7 +11,7 @@ import aiohttp # fetching client sessions or stuff
 import sys #for system-specific parameters and functions
 import re # for regular expression operations
 import json # self-explanatory kek
-import time # also self-explanatory lel
+import time # also self-explanatory le
 import asyncio #tasks and such
 import os # operating system stuff and heroku
 import datetime # self-explanatory too lol
