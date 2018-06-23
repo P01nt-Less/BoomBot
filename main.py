@@ -288,27 +288,29 @@ async def info(ctx):
  ##:::: ##:. #######:: ########:: ########: ##:::. ##: ##:::: ##:::: ##::::'####:. #######:: ##::. ##:                          
 ..:::::..:::.......:::........:::........::..:::::..::..:::::..:::::..:::::....:::.......:::..::::..::   '''
 @bot.command(pass_context = True)
-async def kick(ctx, *, member : discord.Member=None):
-    await bot.delete_message(ctx.message)
+async def kick(ctx, member : discord.Member=None,*, reason=None):
     if not ctx.message.author.server_permissions.kick_members:
-        embed=discord.Embed(title='Error',description='You don\'t have the kick_members permission.', color=0xFF0000)
-        embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await bot.say(embed=embed)
-        return
+        pkick=discord.Embed(title='Error',description='You don\'t have permission to kick members!')
+        pkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=pkick)
     if not member:
-        embed1=discord.Embed(title='Error',description='You have to specify a user to kick.', color=0xFF0000)
-        embed1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=embed1)
+        mkick=discord.Embed(title='Error',description='You must specify a member!')
+        mkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=mkick)
+    if not reason:
+        rkick=discord.Embed(title='Error',description='You must specify a reason!')
+        rkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=rkick)
     try:
         await bot.kick(member)
     except Exception as e:
         if 'Privilege is too low' in str(e):
-            embed2=discord.Embed(title='Error',description='The person you are trying to kick has high permissions.', color=0xFF0000)
-            embed2.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            return await bot.say(embed=embed2)
-    embed3 = discord.Embed(title='Kick',description =f"**%s** has been kicked!"%member.name, color = 0x00FF00)
-    embed3.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await bot.say(embed = embed3)
+            ekick=discord.Embed(title='Error',description='The person you are trying to kick has high permissions.')
+            ekick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+            return await bot.say(embed=ekick)
+        else:
+            pass
+
 
 @bot.command(pass_context = True)
 async def ban(ctx, *,member : discord.Member=None):
