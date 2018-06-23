@@ -72,7 +72,7 @@ async def help(ctx):
     embed.add_field(name='Informational',value='`urban`| `cryptocurrency`')
     embed.add_field(name='Fun',value='`comic` | `cat` | `dog` | `coinflip` | `8ball` | `chucknorris` | `roll` | `joke`')
     embed.add_field(name='BoomBot',value='`info`')
-    embed.add_field(name='Moderation',value='kick` | `ban` | `unban` | `mute` | `unmute` | `softban` | `hackban` | `purge`')
+    embed.add_field(name='Moderation',value='`kick` | `ban` | `unban` | `mute` | `unmute` | `softban` | `hackban` | `purge`')
     embed.add_field(name='Managing',value='`giverole` | `takerole`')
     embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await bot.say(embed=embed)
