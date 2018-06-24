@@ -7,7 +7,7 @@ import traceback #to see the error while in Discord
 import random # for randomizing things
 from random import randint # randints
 import requests # for APIs
-import aiohttp # fetching client sessions or stuff
+import aiohttp # for APIs 2
 import sys #for system-specific parameters and functions
 import re # for regular expression operations
 import json # self-explanatory kek
@@ -156,7 +156,11 @@ async def cryptocurrency(ctx):
  ##::::::: ##:::: ##: ##:. ###:                                                                                                 
  ##:::::::. #######:: ##::. ##:                                                                                                 
 ..:::::::::.......:::..::::..:: '''
-
+@bot.command(pass_context=True)
+async def randomperson(ctx):
+    r = requests.get('https://randomuser.me/api/').json()
+    e = discord.Embed(title='Random Person', description='Just a random person.')
+    e.add_field(name='Name',value=r['results']['name']['title'.capitalize()] + '. ' + ['results']['name']['first'.capitalize()] ['results']['name']['last'.capitalize()])
 
 '''
 '########:::'#######:::'#######::'##::::'##:'########:::'#######::'########:                                                    
