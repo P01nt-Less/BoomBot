@@ -87,10 +87,9 @@ async def help(ctx):
 :......::::........::..::::..::........::..:::::..::..:::::..::........::        '''
 @bot.command(pass_context=True)
 async def ping(ctx):
-    await bot.delete_message(ctx.message)
     channel = ctx.message.channel
     t1 = time.perf_counter()
-    asyncio.sleep(1)
+    await bot.send_typing(channel)
     t2 = time.perf_counter()
     embed=discord.Embed(title='Ping',description='Pong! {} milliseconds.'.format(round((t2-t1)*1000)), color=0x00FF00)
     embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
