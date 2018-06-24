@@ -90,7 +90,7 @@ async def ping(ctx):
     await bot.delete_message(ctx.message)
     channel = ctx.message.channel
     t1 = time.perf_counter()
-    await bot.send_typing(channel)
+    asyncio.sleep(1)
     t2 = time.perf_counter()
     embed=discord.Embed(title='Ping',description='Pong! {} milliseconds.'.format(round((t2-t1)*1000)), color=0x00FF00)
     embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -112,38 +112,6 @@ async def prefixes(ctx):
 : ##:: ##:. ###: ##::::::: ##:::: ##: ##::. ##:: ##:.:: ##: ##.... ##:::: ##::::: ##:: ##:::: ##: ##:. ###: ##.... ##: ##:::::::
 '####: ##::. ##: ##:::::::. #######:: ##:::. ##: ##:::: ##: ##:::: ##:::: ##::::'####:. #######:: ##::. ##: ##:::: ##: ########:
 ....::..::::..::..:::::::::.......:::..:::::..::..:::::..::..:::::..:::::..:::::....:::.......:::..::::..::..:::::..::........::'''
-
-@bot.command(pass_context=True, aliases=['urbandictionary','urbandict','udict','udictionary','udefine','urbandefine'])
-async def urban(ctx,*msg):
-    await bot.delete_message(ctx.message)
-    word = ' '.join(msg)
-    api = "http://api.urbandictionary.com/v0/define"
-    response = requests.get(api, params=[("term", word)]).json()
-    if len(response["list"]) == 0: return await bot.say("Could not find that word!")
-    embed = discord.Embed(title=":mag: Search Word", description=word,color=0x00FF00)
-    embed.add_field(name= "Top definition",value=response['list'][0]['definition'])
-    embed.add_field(name= "Examples",value=response['list'][0]["example"])
-    embed.add_field(name= 'Author',value=response['list'][0]['author'])
-    embed.add_field(name= 'Thumbs Up',value=response['list'][0]['thumbs_up'])
-    embed.add_field(name= 'Thumbs Down',value=response['list'][0]['thumbs_down'])
-    embed.set_footer(text = "Tags: " + ', '.join(response['tags']))
-    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed = embed)
-
-@bot.command(pass_context=True, aliases=['cc'])
-async def cryptocurrency(ctx):
-    if ctx.invoked_subcommand is None:
-        await bot.delete_message(ctx.message)
-        async with aiohttp.ClientSession() as api:
-            async with api.get('https://api.coinmarketcap.com/v2/ticker/') as r:
-                data = await r.json()
-                embed=discord.Embed(title='Cryptocurrency', description='Here is the top three calculated by CoinMarketCap:\n\n{}. {} ({}): ${}\n{}. {} ({}): ${}\n{}. {} ({}): ${}'.format(data['data']['1']['rank'],data['data']['1']['name'],data['data']['1']['symbol'],data['data']['1']['quotes']['USD']['price'],data['data']['1027']['rank'],data['data']['1027']['name'],data['data']['1027']['symbol'],data['data']['1027']['quotes']['USD']['price'],data['data']['52']['rank'],data['data']['52']['name'],data['data']['52']['symbol'],data['data']['52']['quotes']['USD']['price']), color=0x00FF00)
-                embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-                await bot.say(embed=embed)
-    else:
-        pass
-
-
 '''
 '########:'##::::'##:'##::: ##:                                                                                                 
  ##.....:: ##:::: ##: ###:: ##:                                                                                                 
@@ -153,11 +121,6 @@ async def cryptocurrency(ctx):
  ##::::::: ##:::: ##: ##:. ###:                                                                                                 
  ##:::::::. #######:: ##::. ##:                                                                                                 
 ..:::::::::.......:::..::::..:: '''
-@bot.command(pass_context=True)
-async def randomperson(ctx):
-    r = requests.get('https://randomuser.me/api/').json()
-    e = discord.Embed(title='Random Person', description='Just a random person.')
-    e.add_field(name='Name',value=r['results']['name']['title'.capitalize()] + '. ' + ['results']['name']['first'.capitalize()] ['results']['name']['last'.capitalize()])
 
 '''
 '########:::'#######:::'#######::'##::::'##:'########:::'#######::'########:                                                    
@@ -168,23 +131,7 @@ async def randomperson(ctx):
  ##:::: ##: ##:::: ##: ##:::: ##: ##:.:: ##: ##:::: ##: ##:::: ##:::: ##::::                                                    
  ########::. #######::. #######:: ##:::: ##: ########::. #######::::: ##::::                                                    
 ........::::.......::::.......:::..:::::..::........::::.......::::::..:::::    '''
-'''
-@bot.command(pass_context=True, aliases=['botinfo','information','botinformation','binfo','boti','binformation','about'])
-async def info(ctx):
-    await bot.delete_message(ctx.message)
-    second = time.time() - start_time
-    minute, second = divmod(second, 60)
-    hour, minute = divmod(minute, 60)
-    day, hour = divmod(hour, 24)
-    week, day = divmod(day, 7)
-    embed = discord.Embed(description= '',title = 'Information', colour = 0x00FF00)
-    embed.add_field(name = '__Information__', value = f"The Bot is just an ordinary, multi-purpose bot that is really fun, made with Python (aka the best programming language ever made) for Discord. This bot used to be called CommuniBot, and before that: PointBot. CommuniBot was archived because I really didn't care enough anymore about it and it died, so I decided - for no reason - to make a new one! Perhaps because I was really bored... :P", inline=True)
-    embed.add_field(name = '__Status__', value = f"Uptime: I've been online for %d week(s), %d day(s), %d hour(s), %d minute(s), %d second(s)!" % (week, day, hour, minute, second) + "\nTotal Servers: {} servers.".format(len(bot.servers)), inline=True)
-    embed.add_field(name = '__Links__', value = f"[Invite](https://discordapp.com/oauth2/authorize?client_id=431951773159129098&scope=bot&permissions=2146958591)\n[Support Server](https://discord.gg/6Z6Xx)", inline=True)
-    embed.add_field(name = '__Credit__', value = f"<@276043503514025984> - Created the the bot.", inline=True)
-    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await bot.say(embed = embed)
-'''
+
 '''
 '##::::'##::'#######::'########::'########:'########:::::'###::::'########:'####::'#######::'##::: ##:                          
  ###::'###:'##.... ##: ##.... ##: ##.....:: ##.... ##:::'## ##:::... ##..::. ##::'##.... ##: ###:: ##:                          
@@ -306,60 +253,7 @@ async def softban(ctx, member : discord.Member=None,*, reason=None):
     ssoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await bot.say(embed=ssoftban)
     return await bot.send_message(member, f'You have been softbanned from {discord.Server.name} by {ctx.message.author.mention}, because {reason}!', tts=True) 
-'''
-@bot.command(pass_context=True, aliases=['purge','prune'])  
-async def clear(ctx, amount:int):
-    if not ctx.message.author.server_permissions.manage_messages:
-        pclear=discord.Embed(title='Error',description='You don\'t have the manage_messages permission.', color=0xFF0000)
-        pclear.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await bot.say(embed=pclear)
-        return
-    if amount < 1:
-        aclear=discord.Embed(title='Error',description='Please put in a number more than 1.',color=0xFF0000)
-        return await bot.say(embed=aclear)
-    deleted = await bot.purge_from(ctx.message.channel, limit=amount)
-    await asyncio.sleep(3)
-    try:
-        sclear=discord.Embed(title='Clear',description='I have cleared {} messages.'.format(len(deleted)),color=0x00FF00)
-        sclear.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        delete = await bot.say(embed=embed1)
-        asyncio.sleep(3)
-        bot.delete_message(delete)
-    except:
-        pass
 
-@bot.command(pass_context=True, no_pm=True)
-async def mute(ctx, *, member : discord.Member):
-    await bot.delete_message(ctx.message)
-    if not ctx.message.author.server_permissions.manage_messages:
-        embed1 = discord.Embed(title='Error',description ='You don\'t have the manage_messages permission.', color = 0xFF0000)
-        embed1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=embed1)
-    else:  
-        overwrite = discord.PermissionOverwrite()
-        overwrite.send_messages = False
-        await bot.edit_channel_permissions(ctx.message.channel, member, overwrite)
-        await bot.delete_message(ctx.message)
-    embed = discord.Embed(title='Mute',description = "**%s** has been muted!"%member.name, color = 0x00FF00)
-    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await bot.say(embed=embed)
-
-@bot.command(pass_context=True, no_pm=True)
-async def unmute(ctx, *, member : discord.Member):
-    await bot.delete_message(ctx.message)
-    if not ctx.message.author.server_permissions.manage_messages:
-        embed1 = discord.Embed(title='Error',description ='You don\'t have the manage_messages permission.', color = 0xFF0000)
-        embed1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=embed1)
-    else:  
-        overwrite = discord.PermissionOverwrite()
-        overwrite.send_messages = True
-        await bot.edit_channel_permissions(ctx.message.channel, member, overwrite)
-        await bot.delete_message(ctx.message)
-    embed = discord.Embed(title='Unmute',description = "**%s** has been unmuted!"%member.name, color = 0x00FF00)
-    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await bot.say(embed=embed)
-'''
 '''
 '##::::'##::::'###::::'##::: ##::::'###:::::'######:::'####:'##::: ##::'######:::                                               
  ###::'###:::'## ##::: ###:: ##:::'## ##:::'##... ##::. ##:: ###:: ##:'##... ##::                                               
@@ -369,33 +263,7 @@ async def unmute(ctx, *, member : discord.Member):
  ##:.:: ##: ##.... ##: ##:. ###: ##.... ##: ##::: ##::: ##:: ##:. ###: ##::: ##::                                               
  ##:::: ##: ##:::: ##: ##::. ##: ##:::: ##:. ######:::'####: ##::. ##:. ######:::                                               
 ..:::::..::..:::::..::..::::..::..:::::..:::......::::....::..::::..:::......::::    '''
-'''
-@bot.command(pass_context=True, no_pm=True)
-async def giverole(ctx, user: discord.Member, *, role:str=None):
-    await bot.delete_message(ctx.message)
-    if ctx.message.author.server_permissions.manage_roles:
-        await bot.add_roles(user, discord.utils.get(ctx.message.server.roles, name=role))
-        embed1 = discord.Embed(title='Add role',description = 'I added the role ' + str(role) + ' to ' + str(user) + '.', color = 0x00FF00)
-        embed1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed = embed1)
-    else:
-        embed2 = discord.Embed(title='Error',description = 'You don\'t have the manage_roles permission.', color = 0xFF0000)
-        embed2.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed = embed2)
 
-@bot.command(pass_context=True, no_pm=True,aliases=[])
-async def takerole(ctx, user: discord.Member, *, role:str=None):
-    await bot.delete_message(ctx.message)
-    if ctx.message.author.server_permissions.manage_roles:
-        await bot.remove_roles(user, discord.utils.get(ctx.message.server.roles, name=role))
-        embed1 = discord.Embed(title='Add role',description = 'I removed the role ' + str(role) + ' from ' + str(user) + '.', color = 0x00FF00)
-        embed1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed = embed1)
-    else:
-        embed2 = discord.Embed(title='Error',description = 'You don\'t have the manage_roles permission.', color = 0xFF0000)
-        embed2.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed = embed2)
-'''
 if not os.environ.get('TOKEN'):
    print("No tokens!")
 bot.run(os.environ.get('TOKEN').strip('"'))
