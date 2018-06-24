@@ -312,80 +312,93 @@ async def kick(ctx, member : discord.Member=None,*, reason=None):
             pass
     skick=discord.Embed(title='Kick',description=f'{ctx.message.author.mention} has kicked {member.name}, because: {reason}!',color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await bot.say(embed=skick)
-
+    await bot.say(embed=skick)
+    return await bot.send_message(member, f'You have been kicked from {discord.Server.name} by {ctx.message.author.mention}, because {reason}!', tts=True) 
 
 @bot.command(pass_context = True)
-async def ban(ctx, *,member : discord.Member=None):
-    await bot.delete_message(ctx.message)
-    if not ctx.message.author.server_permissions.ban_members:
-        embed=discord.Embed(title='Error',description='You don\'t have the ban_members permission.', color=0xFF0000)
-        embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await bot.say(embed=embed)
-        return
+async def ban(ctx, member : discord.Member=None,*, reason=None):
+    if not ctx.message.author.server_permissions.kick_members:
+        pban=discord.Embed(title='Error',description='You don\'t have permission to ban members!',color=0xFF0000)
+        pban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=pban)
     if not member:
-        embed1=discord.Embed(title='Error',description='You have to specify a user to ban.', color=0xFF0000)
-        embed1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=embed1)
+        mban=discord.Embed(title='Error',description='You must specify a member!',color=0xFF0000)
+        mban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=mban)
+    if not reason:
+        rban=discord.Embed(title='Error',description='You must specify a reason!',color=0xFF0000)
+        rban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=rban)
     try:
         await bot.ban(member)
     except Exception as e:
         if 'Privilege is too low' in str(e):
-            embed2=discord.Embed(title='Error',description='The person you are trying to ban has high permissions.', color=0xFF0000)
-            embed2.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            return await bot.say(embed=embed2)
+            eban=discord.Embed(title='Error',description='The person you are trying to ban has high permissions.',color=0xFF0000)
+            eban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+            return await bot.say(embed=eban)
         else:
             pass
-    embed3 = discord.Embed(title='Ban',description =f"**%s** has been banned!"%member.name, color = 0x00FF00)
-    embed3.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await bot.say(embed = embed3)
+    sban=discord.Embed(title='Ban',description=f'{ctx.message.author.mention} has banned {member.name}, because: {reason}!',color=0x00FF00)
+    sban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    await bot.say(embed=sban)
+    return await bot.send_message(member, f'You have been banned from {discord.Server.name} by {ctx.message.author.mention}, because {reason}!', tts=True) 
 
 @bot.command(pass_context = True)
-async def unban(ctx, *, member : discord.Member=None):
-    await bot.delete_message(ctx.message)
-    if not ctx.message.author.server_permissions.ban_members:
-        embed=discord.Embed(title='Error',description='You don\'t have the ban_members permission.', color=0xFF0000)
-        embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await bot.say(embed=embed)
-        return
+async def unban(ctx, member : discord.Member=None,*, reason=None):
+    if not ctx.message.author.server_permissions.kick_members:
+        punban=discord.Embed(title='Error',description='You don\'t have permission to unban members!',color=0xFF0000)
+        punban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=punban)
     if not member:
-        embed1=discord.Embed(title='Error',description='You have to specify a user to unban.', color=0xFF0000)
-        embed1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=embed1)
+        munban=discord.Embed(title='Error',description='You must specify a member!',color=0xFF0000)
+        munban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=munban)
+    if not reason:
+        runban=discord.Embed(title='Error',description='You must specify a reason!',color=0xFF0000)
+        runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=runban)
     try:
-        await bot.unban(member.server,member)
-    except:
-        return
-    embed3=discord.Embed(title='Unban',description=f"**%s** has been unbanned!"%member.name, color=0x00FF00)
-    embed3.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await bot.say(embed = embed3)
-
-@bot.command(pass_context = True)
-async def softban(ctx, *,member : discord.Member=None):
-    await bot.delete_message(ctx.message)
-    if not ctx.message.author.server_permissions.ban_members:
-        embed=discord.Embed(title='Error',description='You don\'t have the ban_members permission.', color=0xFF0000)
-        embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await bot.say(embed=embed)
-        return
-    if not member:
-        embed1=discord.Embed(title='Error',description='You have to specify a user to soft-ban.', color=0xFF0000)
-        embed1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=embed1)
-    try:
-        await bot.ban(member)
-        await bot.unban(member.server,member)
+        await bot.unban(discord.Server,member)
     except Exception as e:
         if 'Privilege is too low' in str(e):
-            embed2=discord.Embed(title='Error',description='The person you are trying to soft-ban has high permissions.', color=0xFF0000)
-            embed2.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            return await bot.say(embed=embed2)
+            eunban=discord.Embed(title='Error',description='The person you are trying to unban has high permissions.',color=0xFF0000)
+            eunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+            return await bot.say(embed=eunban)
         else:
             pass
-    
-    embed3 = discord.Embed(title='Ban',description =f"**%s** has been soft-banned!"%member.name, color = 0x00FF00)
-    embed3.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await bot.say(embed = embed3)
+    sunban=discord.Embed(title='Unban',description=f'{ctx.message.author.mention} has unbanned {member.name}, because: {reason}!',color=0x00FF00)
+    sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    await bot.say(embed=unban)
+    return await bot.send_message(member, f'You have been unbanned from {discord.Server.name} by {ctx.message.author.mention}, because {reason}!', tts=True) 
+
+@bot.command(pass_context = True)
+async def softban(ctx, member : discord.Member=None,*, reason=None):
+    if not ctx.message.author.server_permissions.kick_members:
+        psoftban=discord.Embed(title='Error',description='You don\'t have permission to softban members!',color=0xFF0000)
+        psoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=psoftban)
+    if not member:
+        msoftban=discord.Embed(title='Error',description='You must specify a member!',color=0xFF0000)
+        msoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=msoftban)
+    if not reason:
+        rsoftban=discord.Embed(title='Error',description='You must specify a reason!',color=0xFF0000)
+        rsoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=rsoftban)
+    try:
+        await bot.ban(member, delete_message_days=7)
+        await bot.unban(discord.Server,member)
+    except Exception as e:
+        if 'Privilege is too low' in str(e):
+            esoftban=discord.Embed(title='Error',description='The person you are trying to softban has high permissions.',color=0xFF0000)
+            esoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+            return await bot.say(embed=esoftban)
+        else:
+            pass
+    ssoftban=discord.Embed(title='Softban',description=f'{ctx.message.author.mention} has softbanned {member.name}, because: {reason}!',color=0x00FF00)
+    ssoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    await bot.say(embed=ssoftban)
+    return await bot.send_message(member, f'You have been softbanned from {discord.Server.name} by {ctx.message.author.mention}, because {reason}!', tts=True) 
 
 @bot.command(pass_context=True, aliases=['purge','prune'])  
 async def clear(ctx, amount:int):
