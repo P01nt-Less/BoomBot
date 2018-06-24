@@ -290,26 +290,29 @@ async def info(ctx):
 @bot.command(pass_context = True)
 async def kick(ctx, member : discord.Member=None,*, reason=None):
     if not ctx.message.author.server_permissions.kick_members:
-        pkick=discord.Embed(title='Error',description='You don\'t have permission to kick members!')
+        pkick=discord.Embed(title='Error',description='You don\'t have permission to kick members!',color=0xFF0000)
         pkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await bot.say(embed=pkick)
     if not member:
-        mkick=discord.Embed(title='Error',description='You must specify a member!')
+        mkick=discord.Embed(title='Error',description='You must specify a member!',color=0xFF0000)
         mkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await bot.say(embed=mkick)
     if not reason:
-        rkick=discord.Embed(title='Error',description='You must specify a reason!')
+        rkick=discord.Embed(title='Error',description='You must specify a reason!',color=0xFF0000)
         rkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await bot.say(embed=rkick)
     try:
         await bot.kick(member)
     except Exception as e:
         if 'Privilege is too low' in str(e):
-            ekick=discord.Embed(title='Error',description='The person you are trying to kick has high permissions.')
+            ekick=discord.Embed(title='Error',description='The person you are trying to kick has high permissions.',color=0xFF0000)
             ekick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await bot.say(embed=ekick)
         else:
             pass
+    skick=discord.Embed(title='Kick',description=f'{ctx.message.author.mention} has kicked {member.name}, because: {reason}!',color=0x00FF00)
+    skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    return await bot.say(embed=skick)
 
 
 @bot.command(pass_context = True)
