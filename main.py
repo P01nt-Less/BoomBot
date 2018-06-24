@@ -402,21 +402,22 @@ async def softban(ctx, member : discord.Member=None,*, reason=None):
 
 @bot.command(pass_context=True, aliases=['purge','prune'])  
 async def clear(ctx, amount:int):
-    await bot.delete_message(ctx.message)
     if not ctx.message.author.server_permissions.manage_messages:
-        embed=discord.Embed(title='Error',description='You don\'t have the manage_messages permission.', color=0xFF0000)
-        embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await bot.say(embed=embed)
+        pclear=discord.Embed(title='Error',description='You don\'t have the manage_messages permission.', color=0xFF0000)
+        pclear.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await bot.say(embed=pclear)
         return
     if amount < 1:
-        embed2=discord.Embed(title='Error',description='Please put in a number more than 1.',color=0xFF0000)
-        await bot.say(embed=embed2)
+        aclear=discord.Embed(title='Error',description='Please put in a number more than 1.',color=0xFF0000)
+        return await bot.say(embed=aclear)
     deleted = await bot.purge_from(ctx.message.channel, limit=amount)
     await asyncio.sleep(3)
     try:
-        embed1=discord.Embed(title='Clear',description='I have cleared {} messages.'.format(len(deleted)),color=0x00FF00)
-        embed1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await bot.say(embed=embed1)
+        sclear=discord.Embed(title='Clear',description='I have cleared {} messages.'.format(len(deleted)),color=0x00FF00)
+        sclear.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        delete = await bot.say(embed=embed1)
+        asyncio.sleep(3)
+        bot.delete_message(delete)
     except:
         pass
 
