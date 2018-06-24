@@ -66,17 +66,19 @@ async def restart(ctx):
  ##:::: ##: ########: ########: ##::::::::                                                                                      
 ..:::::..::........::........::..:::::::::     '''
 @bot.command(pass_context=True)
-async def help(ctx):
-    embed=discord.Embed(title='Help', description='Find all commands here!', color=0x2874A6)
-    embed.add_field(name='General',value='`ping` | `prefixes`')
-    embed.add_field(name='Informational',value='`urban`| `cryptocurrency`')
-    embed.add_field(name='Fun',value='`comic` | `cat` | `dog` | `coinflip` | `8ball` | `chucknorris` | `roll` | `joke`')
-    embed.add_field(name='BoomBot',value='`info`')
-    embed.add_field(name='Moderation',value='`kick` | `ban` | `unban` | `mute` | `unmute` | `softban` | `hackban` | `purge`')
-    embed.add_field(name='Managing',value='`giverole` | `takerole`')
-    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed=embed)
-
+async def help(ctx,c):
+    if c == None:
+        embed=discord.Embed(title='Help', description='Find all commands here!', color=0x2874A6)
+        embed.add_field(name='General',value='`ping` | `prefixes`')
+        embed.add_field(name='Informational',value='`urban`| `cryptocurrency`')
+        embed.add_field(name='Fun',value='Nothing')
+        embed.add_field(name='BoomBot',value='`info`')
+        embed.add_field(name='Moderation',value='`kick` | `ban` | `unmute` | `softban` |')
+        embed.add_field(name='Managing',value='`giverole` | `takerole`')
+        embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await bot.say(embed=embed)
+    else:
+        return bot.say('Checking help for each command is not done yet. Check later.')
 '''
 :'######:::'########:'##::: ##:'########:'########:::::'###::::'##:::::::                                                       
 '##... ##:: ##.....:: ###:: ##: ##.....:: ##.... ##:::'## ##::: ##:::::::                                                       
@@ -135,8 +137,8 @@ async def urban(ctx,*msg):
 async def cryptocurrency(ctx):
     if ctx.invoked_subcommand is None:
         await bot.delete_message(ctx.message)
-        async with aiohttp.ClientSession() as session:
-            async with session.get('https://api.coinmarketcap.com/v2/ticker/') as r:
+        async with aiohttp.ClientSession() as api:
+            async with api.get('https://api.coinmarketcap.com/v2/ticker/') as r:
                 data = await r.json()
                 embed=discord.Embed(title='Cryptocurrency', description='Here is the top three calculated by CoinMarketCap:\n\n{}. {} ({}): ${}\n{}. {} ({}): ${}\n{}. {} ({}): ${}'.format(data['data']['1']['rank'],data['data']['1']['name'],data['data']['1']['symbol'],data['data']['1']['quotes']['USD']['price'],data['data']['1027']['rank'],data['data']['1027']['name'],data['data']['1027']['symbol'],data['data']['1027']['quotes']['USD']['price'],data['data']['52']['rank'],data['data']['52']['name'],data['data']['52']['symbol'],data['data']['52']['quotes']['USD']['price']), color=0x00FF00)
                 embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -154,103 +156,7 @@ async def cryptocurrency(ctx):
  ##::::::: ##:::: ##: ##:. ###:                                                                                                 
  ##:::::::. #######:: ##::. ##:                                                                                                 
 ..:::::::::.......:::..::::..:: '''
-@bot.command(pass_context=True, no_pm=True)
-async def comic(ctx):
-    await bot.delete_message(ctx.message)
-    api = "https://xkcd.com/{}/info.0.json".format(random.randint(1, 1800))
-    async with aiohttp.ClientSession() as session:
-        async with session.get(api) as r:
-            response = await r.json()
-            embed = discord.Embed(title="Comic", description=response["title"], color=0x00FF00)
-            embed.set_image(url=response["img"])
-            embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            await bot.say(embed=embed)
 
-@bot.command(pass_context=True)
-async def cat(ctx):
-    api = 'https://aws.random.cat/meow'
-    async with aiohttp.ClientSession() as session:
-        async with session.get(api) as r:
-            if r.status == 200:
-                response = await r.json()
-                embed = discord.Embed(title="Cat", description="Here's your random cat image", color=0x00FF00)
-                embed.set_author(name=f"{ctx.message.author.display_name}", icon_url=f"{ctx.message.author.avatar_url}")
-                embed.set_image(url=response['file'])
-                await bot.say(embed=embed)
-            else:
-                embed1 = discord.Embed(title='Error',description='I could not access the random.cat API!',color=0xFF0000)
-                embed1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-                bot.say(embed=embed1)
-                
-
-@bot.command(pass_context=True)
-async def dog(ctx):
-    await bot.delete_message(ctx.message)
-    api = "https://api.thedogapi.co.uk/v2/dog.php"
-    async with aiohttp.ClientSession() as session:
-        async with session.get(api) as r:
-            if r.status == 200:
-                response = await r.json()
-                embed = discord.Embed(title="Dog", description="Here's your random Dog", color=0xFF0000)
-                embed.set_author(name=f"{ctx.message.author.display_name}", icon_url=f"{ctx.message.author.avatar_url}")
-                embed.set_image(url=response['data'][0]["url"])
-                await bot.say(embed=embed)
-            else:
-                embed1 = discord.Embed(title='Error', description='I could not access thedogapi.co.uk!',color=0xFF0000)
-                embed1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-                bot.say(embed=embed1)
-
-@bot.command(pass_context=True)
-async def coinflip(ctx):
-    await bot.delete_message(ctx.message)
-    choice = random.choice(['Heads!','Tails!'])
-    embed = discord.Embed(title='Coinflip',description=choice,color=0x00FF00)
-    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed=embed)
-
-@bot.command(name="8ball", pass_context=True, aliases=['eightball'])
-async def _8ball(ctx, question : str= None):
-    await bot.delete_message(ctx.message)
-    responses = [["Signs point to yes.", "Yes.", "Without a doubt.", "As I see it, yes.", "You may rely on it.", "It is decidedly so.", "Yes - definitely.", "It is certain.", "Most likely.", "Outlook good."],
-    ["Reply hazy, try again.", "Concentrate and ask again.", "Better not tell you now.", "Cannot predict now.", "Ask again later."],
-    ["My sources say no.", "Outlook not so good.", "Very doubtful.", "My reply is no.", "Don't count on it."]]
-    embed = discord.Embed(title='8Ball',description=':8ball:' + random.choice(random.choice(responses)),color=0x00FF00)
-    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    embed1 = discord.Embed(title='8Ball',description='Make sure to put a question mark and add quotation marks on both sides of the question.',color=0xFF0000)
-    embed1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    if "?" in question:
-        await bot.say(embed=embed)
-    else:
-        await bot.say(embed=embed1)
-
-@bot.command(pass_context=True)
-async def chucknorris(ctx):
-    await bot.delete_message(ctx.message)
-    r = requests.get('https://api.chucknorris.io/jokes/random')
-    embed = discord.Embed(title='Chuck Norris Facts', description=r.json()['value'], color=0x00FF00)
-    embed.set_image(url='https://assets.chucknorris.host/img/avatar/chuck-norris.png')
-    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed=embed)
-
-@bot.command(pass_context=True, aliases=['rolls','dice','gamedie','die'])
-async def roll(ctx, number: int=6):
-    await bot.delete_message(ctx.message)
-    if number > 1:
-        embed = discord.Embed(title='Roll',description=f':game_die: {randint(1,number)}',color=0x00FF00)
-        embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await bot.say(embed=embed)
-    else:
-        embed1 = discord.Embed(title='Error',description=f'Please insert a number higher than one.',color=0xFF0000)
-        embed1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await bot.say(embed=embed1)
-
-@bot.command(pass_context=True)
-async def joke(ctx):
-    await bot.delete_message(ctx.message)
-    r = requests.get('https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_joke')
-    embed = discord.Embed(title=r.json()['setup'], description=r.json()['punchline'], color=0x00FF00)
-    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed=embed)
 
 '''
 '########:::'#######:::'#######::'##::::'##:'########:::'#######::'########:                                                    
@@ -261,7 +167,7 @@ async def joke(ctx):
  ##:::: ##: ##:::: ##: ##:::: ##: ##:.:: ##: ##:::: ##: ##:::: ##:::: ##::::                                                    
  ########::. #######::. #######:: ##:::: ##: ########::. #######::::: ##::::                                                    
 ........::::.......::::.......:::..:::::..::........::::.......::::::..:::::    '''
-
+'''
 @bot.command(pass_context=True, aliases=['botinfo','information','botinformation','binfo','boti','binformation','about'])
 async def info(ctx):
     await bot.delete_message(ctx.message)
@@ -277,7 +183,7 @@ async def info(ctx):
     embed.add_field(name = '__Credit__', value = f"<@276043503514025984> - Created the the bot.", inline=True)
     embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await bot.say(embed = embed)
-
+'''
 '''
 '##::::'##::'#######::'########::'########:'########:::::'###::::'########:'####::'#######::'##::: ##:                          
  ###::'###:'##.... ##: ##.... ##: ##.....:: ##.... ##:::'## ##:::... ##..::. ##::'##.... ##: ###:: ##:                          
@@ -399,7 +305,7 @@ async def softban(ctx, member : discord.Member=None,*, reason=None):
     ssoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await bot.say(embed=ssoftban)
     return await bot.send_message(member, f'You have been softbanned from {discord.Server.name} by {ctx.message.author.mention}, because {reason}!', tts=True) 
-
+'''
 @bot.command(pass_context=True, aliases=['purge','prune'])  
 async def clear(ctx, amount:int):
     if not ctx.message.author.server_permissions.manage_messages:
@@ -452,7 +358,7 @@ async def unmute(ctx, *, member : discord.Member):
     embed = discord.Embed(title='Unmute',description = "**%s** has been unmuted!"%member.name, color = 0x00FF00)
     embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await bot.say(embed=embed)
-
+'''
 '''
 '##::::'##::::'###::::'##::: ##::::'###:::::'######:::'####:'##::: ##::'######:::                                               
  ###::'###:::'## ##::: ###:: ##:::'## ##:::'##... ##::. ##:: ###:: ##:'##... ##::                                               
@@ -462,7 +368,7 @@ async def unmute(ctx, *, member : discord.Member):
  ##:.:: ##: ##.... ##: ##:. ###: ##.... ##: ##::: ##::: ##:: ##:. ###: ##::: ##::                                               
  ##:::: ##: ##:::: ##: ##::. ##: ##:::: ##:. ######:::'####: ##::. ##:. ######:::                                               
 ..:::::..::..:::::..::..::::..::..:::::..:::......::::....::..::::..:::......::::    '''
-
+'''
 @bot.command(pass_context=True, no_pm=True)
 async def giverole(ctx, user: discord.Member, *, role:str=None):
     await bot.delete_message(ctx.message)
@@ -488,7 +394,7 @@ async def takerole(ctx, user: discord.Member, *, role:str=None):
         embed2 = discord.Embed(title='Error',description = 'You don\'t have the manage_roles permission.', color = 0xFF0000)
         embed2.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await bot.say(embed = embed2)
-
+'''
 if not os.environ.get('TOKEN'):
    print("No tokens!")
 bot.run(os.environ.get('TOKEN').strip('"'))
