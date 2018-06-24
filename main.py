@@ -66,7 +66,7 @@ async def restart(ctx):
  ##:::: ##: ########: ########: ##::::::::                                                                                      
 ..:::::..::........::........::..:::::::::     '''
 @bot.command(pass_context=True)
-async def help(ctx,c):
+async def help(ctx):
     embed=discord.Embed(title='Help', description='Find all commands here!', color=0x2874A6)
     embed.add_field(name='General',value='`ping` | `prefixes`')
     embed.add_field(name='Informational',value='`urban`| `cryptocurrency`')
