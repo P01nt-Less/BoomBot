@@ -67,18 +67,15 @@ async def restart(ctx):
 ..:::::..::........::........::..:::::::::     '''
 @bot.command(pass_context=True)
 async def help(ctx,c):
-    if c == None:
-        embed=discord.Embed(title='Help', description='Find all commands here!', color=0x2874A6)
-        embed.add_field(name='General',value='`ping` | `prefixes`')
-        embed.add_field(name='Informational',value='`urban`| `cryptocurrency`')
-        embed.add_field(name='Fun',value='Nothing')
-        embed.add_field(name='BoomBot',value='`info`')
-        embed.add_field(name='Moderation',value='`kick` | `ban` | `unmute` | `softban` |')
-        embed.add_field(name='Managing',value='`giverole` | `takerole`')
-        embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await bot.say(embed=embed)
-    else:
-        return bot.say('Checking help for each command is not done yet. Check later.')
+    embed=discord.Embed(title='Help', description='Find all commands here!', color=0x2874A6)
+    embed.add_field(name='General',value='`ping` | `prefixes`')
+    embed.add_field(name='Informational',value='`urban`| `cryptocurrency`')
+    embed.add_field(name='Fun',value='Nothing')
+    embed.add_field(name='BoomBot',value='`info`')
+    embed.add_field(name='Moderation',value='`kick` | `ban` | `unmute` | `softban` |')
+    embed.add_field(name='Managing',value='`giverole` | `takerole`')
+    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    await bot.say(embed=embed)
 '''
 :'######:::'########:'##::: ##:'########:'########:::::'###::::'##:::::::                                                       
 '##... ##:: ##.....:: ###:: ##: ##.....:: ##.... ##:::'## ##::: ##:::::::                                                       
