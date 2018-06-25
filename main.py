@@ -69,10 +69,10 @@ async def restart(ctx):
 async def help(ctx):
     embed=discord.Embed(title='Help', description='Find all commands here!', color=0x2874A6)
     embed.add_field(name='General',value='`ping` | `prefixes`')
-    embed.add_field(name='Informational',value='`urban`| `cryptocurrency`')
-    embed.add_field(name='Fun',value='Nothing')
-    embed.add_field(name='BoomBot',value='`info`')
-    embed.add_field(name='Moderation',value='`kick` | `ban` | `unmute` | `softban` |')
+    embed.add_field(name='Informational',value='')
+    embed.add_field(name='Fun',value='')
+    embed.add_field(name='BoomBot',value='')
+    embed.add_field(name='Moderation',value='`kick` | `ban` | `unmute` | `softban`')
     embed.add_field(name='Managing',value='`giverole` | `takerole`')
     embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await bot.say(embed=embed)
@@ -263,6 +263,70 @@ async def softban(ctx, member : discord.Member=None,*, reason=None):
  ##:::: ##: ##:::: ##: ##::. ##: ##:::: ##:. ######:::'####: ##::. ##:. ######:::                                               
 ..:::::..::..:::::..::..::::..::..:::::..:::......::::....::..::::..:::......::::    '''
 
+@bot.command(pass_context=True,aliases=['gr'])
+async def giverole(ctx, member: discord.Member, *, role: discord.Role = None):
+    if not ctx.message.author.server_permissions.manage_roles:
+        pgiverole=discord.Embed(title='Error',description='You don\'t have permission to give roles to members!',color=0xFF0000)
+        pgiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=pgiverole)
+    if not member:
+        mgiverole=discord.Embed(title='Error',description='You must specify a member!',color=0xFF0000)
+        mgiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=mgiverole)
+    if not role:
+        rgiverole=discord.Embed(title='Error',description='You must specify a role!',color=0xFF0000)
+        rgiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=rgiverole)
+    if role not in ctx.message.server.roles:
+        ngiverole=discord.Embed(title='Error',description='That isn\'t a role!',color=0xFF0000)
+        ngiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=ngiverole)
+    try:
+        bot.add_roles(member, role)
+        sgiverole=discord.Embed(title='Giverole',description=f'{ctx.message.author.mention} has given the role, {role}, to {member.name}!',color=0x00FF00)
+        sgiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await bot.say(embed=sgiverole)
+    except Exception as e:
+        if 'Privilege is too low' in str(e):
+            egiverole=discord.Embed(title='Error',description='The person you are trying to give a role to has high permissions.',color=0xFF0000)
+            egiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+            return await bot.say(embed=egiverole)
+        else:
+            pass
+@bot.command(pass_context=True,aliases=['gr'])
+async def giverole(ctx, member: discord.Member, *, role: discord.Role = None):
+    if not ctx.message.author.server_permissions.manage_roles:
+        ptakerole=discord.Embed(title='Error',description='You don\'t have permission to give roles to members!',color=0xFF0000)
+        ptakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=ptakerole)
+    if not member:
+        mtakerole=discord.Embed(title='Error',description='You must specify a member!',color=0xFF0000)
+        mtakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=mtakerole)
+    if not role:
+        rtakerole=discord.Embed(title='Error',description='You must specify a role!',color=0xFF0000)
+        rtakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=rtakerole)
+    if role not in ctx.message.server.roles:
+        ntakerole=discord.Embed(title='Error',description='That isn\'t a role!',color=0xFF0000)
+        ntakeerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await bot.say(embed=ntakerole)
+    try:
+        bot.remove_roles(member, role)
+        stakerole=discord.Embed(title='Takerole',description=f'{ctx.message.author.mention} has taken the role, {role}, from {member.name}!',color=0x00FF00)
+        stakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await bot.say(embed=stakerole)
+    except Exception as e:
+        if 'Privilege is too low' in str(e):
+            egiverole=discord.Embed(title='Error',description=f'The person you are trying to take a role from has high permissions.',color=0xFF0000)
+            egiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+            return await bot.say(embed=etakerole)
+        else:
+            pass
+
+        
+  
+  
 if not os.environ.get('TOKEN'):
    print("No tokens!")
 bot.run(os.environ.get('TOKEN').strip('"'))
