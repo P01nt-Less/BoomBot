@@ -293,8 +293,8 @@ async def giverole(ctx, member: discord.Member, *, role: discord.Role = None):
             return await bot.say(embed=egiverole)
         else:
             pass
-@bot.command(pass_context=True,aliases=['gr'])
-async def giverole(ctx, member: discord.Member, *, role: discord.Role = None):
+@bot.command(pass_context=True,aliases=['tr'])
+async def takerole(ctx, member: discord.Member, *, role: discord.Role = None):
     if not ctx.message.author.server_permissions.manage_roles:
         ptakerole=discord.Embed(title='Error',description='You don\'t have permission to give roles to members!',color=0xFF0000)
         ptakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
