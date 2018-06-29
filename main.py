@@ -6,8 +6,8 @@ import discord.utils
 import re
 import os
 # Other Imports
-
-bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'), description='The one, and only: The Bot, created by Pointless#1278.', self_bot=False,)
+prefix=commands.when_mentioned_or('!')
+bot = commands.Bot(command_prefix=prefix, description='The one, and only: The Bot, created by Pointless#1278.', self_bot=False,)
 bot.remove_command('help')
 
 def pointcheck(ctx):
@@ -19,9 +19,12 @@ async def on_ready():
     print('Online.')
     print('https://discordapp.com/oauth2/authorize?client_id=431951773159129098&scope=bot&permissions=2146958591')
   
-@bot.command(pass_context=True)
-async def hithere(ctx):
-    bot.say('ohhimark')
+@client.event
+async def on_message(message):
+    if message.content.startswith(prefix + 'test'):
+        bot.say('Hey!')
+    else:
+        bot.say('Oh boy!')
 
 if not os.environ.get('TOKEN'):
    print("No tokens!")
