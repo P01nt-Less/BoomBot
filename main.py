@@ -21,7 +21,7 @@ async def on_ready():
   
 @bot.event
 async def on_message(message):
-    if message.content.startswith(prefix + 'test'):
+    if message.content.startswith(str(prefix) + str('test')):
         bot.say('Hey!')
     else:
         bot.say('Oh boy!')
