@@ -26,6 +26,6 @@ async def on_message(message):
     else:
         bot.say('Oh boy!')
 
-if not os.environ.get('TOKEN'):
-   print("No tokens!")
-bot.run(os.environ.get('TOKEN').strip('"'))
+if 'TOKEN' in os.environ:
+    heroku = True
+    TOKEN = os.environ['TOKEN']
