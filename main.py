@@ -283,7 +283,7 @@ async def giverole(ctx, member: discord.Member, *, role: discord.Role = None):
         return await bot.say(embed=ngiverole)
     try:
         rolegive = discord.utils.get(ctx.message.server.roles, name=role)
-        bot.add_roles(member, rolegive)
+        bot.add_roles(member, role)
         sgiverole=discord.Embed(title='Giverole',description=f'{ctx.message.author.mention} has given the role, {role}, to {member.name}!',color=0x00FF00)
         sgiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         await bot.say(embed=sgiverole)
@@ -296,6 +296,7 @@ async def giverole(ctx, member: discord.Member, *, role: discord.Role = None):
             pass
 @bot.command(pass_context=True,aliases=['tr'])
 async def takerole(ctx, member: discord.Member, *, role: discord.Role = None):
+    server_roles = [role for role in ctx.message.server.roles if not role.is_everyone]
     if not ctx.message.author.server_permissions.manage_roles:
         ptakerole=discord.Embed(title='Error',description='You don\'t have permission to give roles to members!',color=0xFF0000)
         ptakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -308,7 +309,7 @@ async def takerole(ctx, member: discord.Member, *, role: discord.Role = None):
         rtakerole=discord.Embed(title='Error',description='You must specify a role!',color=0xFF0000)
         rtakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await bot.say(embed=rtakerole)
-    if role not in ctx.message.server.roles:
+    if role not in server_roles
         ntakerole=discord.Embed(title='Error',description='That isn\'t a role!',color=0xFF0000)
         ntakeerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await bot.say(embed=ntakerole)
