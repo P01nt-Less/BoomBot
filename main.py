@@ -4,6 +4,7 @@ from discord.ext import commands
 import discord.utils
 # Python Imports
 import re
+import os
 # Other Imports
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'), description='The one, and only: The Bot, created by Pointless#1278.', self_bot=False,)
