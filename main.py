@@ -309,7 +309,7 @@ async def takerole(ctx, member: discord.Member, *, role: discord.Role = None):
         rtakerole=discord.Embed(title='Error',description='You must specify a role!',color=0xFF0000)
         rtakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await bot.say(embed=rtakerole)
-    if role not in server_roles
+    if role not in server_roles:
         ntakerole=discord.Embed(title='Error',description='That isn\'t a role!',color=0xFF0000)
         ntakeerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await bot.say(embed=ntakerole)
