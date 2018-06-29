@@ -19,7 +19,7 @@ async def on_ready():
     print('Online.')
     print('https://discordapp.com/oauth2/authorize?client_id=431951773159129098&scope=bot&permissions=2146958591')
   
-@client.event
+@bot.event
 async def on_message(message):
     if message.content.startswith(prefix + 'test'):
         bot.say('Hey!')
